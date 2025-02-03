@@ -20,5 +20,5 @@ def on_loop():
 
 
 # MAIN FUNCTION
-print("\n [STATE_DEPLOY] [Started] \n", flush = True)
+print("\n \033[38;5;46m[STATE_DEPLOY] [Started]\033[0m \n", flush=True)
 __init__()

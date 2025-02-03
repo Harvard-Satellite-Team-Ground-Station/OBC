@@ -20,5 +20,5 @@ def on_loop():
 
 
 # MAIN FUNCTION
-print("\n [STATE_ORIENT] [Started] \n", flush = True)
+print("\n \033[38;5;46m[STATE_ORIENT] [Started]\033[0m \n", flush=True)
 __init__()

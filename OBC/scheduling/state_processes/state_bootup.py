@@ -19,7 +19,7 @@ def on_loop():
 
 
 # MAIN FUNCTION
-print("\n [STATE_BOOTUP] [Started] \n", flush = True)
+print("\n \033[38;5;46m[STATE_BOOTUP] [Started]\033[0m \n", flush=True)
 __init__()
-print("\n [STATE_BOOTUP] [Ended] \n", flush = True)
+print("\n \033[38;5;196m[STATE_BOOTUP] [Ended]\033[0m \n", flush=True)
 
