@@ -17,6 +17,7 @@ import subprocess
 import queue
 import os
 import re
+import config
 
 
 # ///////////////////////  VARIABLES ///////////////////////////// #
@@ -110,7 +111,7 @@ def stop_process(process_id, process_dict, process_list=[]):
 def run_script(script_name, output_queue, stop_event, process_id):
     # to run the script, we need an interpreter, the python interpreter is located at the file "/usr/bin/python3"
     # PIPE = make a standard pipe, which allows for standard communication across channels, in this case the I/O channel 
-    process = subprocess.Popen(["/usr/bin/python3", script_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen([config.PYTHON_FILE_COMPILER, script_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     while not stop_event.is_set():
         output = process.stdout.readline()
         if output == '' and process.poll() is not None:

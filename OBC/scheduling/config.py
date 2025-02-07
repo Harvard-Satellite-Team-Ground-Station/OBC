@@ -1,0 +1,1 @@
+PYTHON_FILE_COMPILER = "/usr/bin/python3"
