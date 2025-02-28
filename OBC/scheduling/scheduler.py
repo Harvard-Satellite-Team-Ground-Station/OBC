@@ -1,17 +1,8 @@
-# ///////////////////////////////////////////////////////////////// #
 # scheduler.py
-# ///////////////////////////////////////////////////////////////// #
-# 
-# ///////////////////////////////////////////////////////////////// #
-# DONE step 1: run a process
-# DONE step 2: run a process with real-time print updates
-# DONE step 3: accomplish this with two or more programs
-# DONE step 4: kill a program mid-run
-# WORKING step 5: dynamically start up a process
-# ///////////////////////////////////////////////////////////////// #
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 import multiprocessing
 import subprocess
 import queue
@@ -20,21 +11,21 @@ import re
 import config
 
 
-# ///////////////////////  VARIABLES ///////////////////////////// #
+
+# ++++++++++++++ Global Variables ++++++++++++++ #
 # checkpoints for FSM
 checkpoint = False
 deployed_already = False
 
 # processes
+    # Each file will run in its own process
+    # Data processes run forever
+    # Data processes are assigned IDs 0-99
+    # State processes start/end dynamically
+    # State processes are assigned IDs 100+
 scheduling_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Each file will run in its own process
-# Data processes run forever
-# Data processes are assigned IDs 0-99
-# State processes start/end dynamically
-# State processes are assigned IDs 100+
-
-# It can be useful to print out which processes are active at a given time
+# Useful to print out which processes are active at a given time
 active_process_dict = {}
 active_process_list = []
 
@@ -63,19 +54,19 @@ state_processes_ids = {"bootup"     : 100,
                        "orient"     : 106}
 
 
-# ///////////////////////  SETUP FUNCTIONS ///////////////////////////// #
+# +++++++++++++++++ Functions: Setup +++++++++++++++++ #
 
-
-# START A PROCESS 
-    # process_id        the state process ID we assign, a number 100+
-    # process_dict      dictionary that holds two kinds of values: 
-    #                   process#: multiprocessing object for a process 
-    #                   stop_event#: multiprocessing method to stop a process object
-    # process_list      a list-format of the process_dict, for printing to terminal
-    # process_files     these are the code files the processes in the dict will run
-    #                   are we using the 'data_processes' list of files or 'state_processes' list of files
 def start_process(process_id, process_dict, process_files=state_files, process_list=[]):
-    # adjust mathematical computations based on if state or data process
+    """ 
+    Start a process.
+    process_id        the state process ID we assign, a number 100+
+    process_dict      dictionary that holds two kinds of values: 
+                      process#: multiprocessing object for a process 
+                      stop_event#: multiprocessing method to stop a process object
+    process_list      a list-format of the process_dict, for printing to terminal
+    process_files     these are the code files the processes in the dict will run
+                      are we using the 'data_processes' list of files or 'state_processes' list of files
+    """
     index = 1
     if process_id >= 100:
         index = 100
@@ -85,10 +76,10 @@ def start_process(process_id, process_dict, process_files=state_files, process_l
     process_list.append(process_id)
     print("\033[38;5;12m Active Processes:", process_list, "\033[0m")
 
-
-# STOP A STATE PROCESS
 def stop_process(process_id, process_dict, process_list=[]):
-
+    """ 
+    Stop a state process. 
+    """
     stop_event_key = f"stop_event{process_id}"
     stop_event = process_dict.get(stop_event_key)
     process_key = f"process{process_id}"
@@ -104,13 +95,12 @@ def stop_process(process_id, process_dict, process_list=[]):
         del process_dict[process_key]
         process_list.remove(process_id)
 
-    
-
-
-# RUN A PROCESS
 def run_script(script_name, output_queue, stop_event, process_id):
-    # to run the script, we need an interpreter, the python interpreter is located at the file "/usr/bin/python3"
-    # PIPE = make a standard pipe, which allows for standard communication across channels, in this case the I/O channel 
+    """ 
+    Stop a state process. 
+    to run the script, we need an interpreter, the python interpreter is located at the file "/usr/bin/python3"
+    PIPE = make a standard pipe, which allows for standard communication across channels, in this case the I/O channel 
+    """
     process = subprocess.Popen([config.PYTHON_FILE_COMPILER, script_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     while not stop_event.is_set():
         output = process.stdout.readline()
@@ -118,7 +108,6 @@ def run_script(script_name, output_queue, stop_event, process_id):
             break
         if output:
             output_queue.put((process_id, output.strip()))
-
 
 def extract_data(output):
     data_value = re.search(r'\[([-+]?\d+)\]', output)
@@ -131,32 +120,31 @@ def extract_data_multiple(output):
     return values_list
 
 
-# MAIN FUNCTION
+# +++++++++++++++++ Functions: Main +++++++++++++++++ #
 if __name__ == "__main__":
 
-    # SETUP MULTIPROCESSING
+    # Setup multiprocessing
     output_queue = multiprocessing.Queue()
     processes = []
 
-    # FIRE THE "BOOTUP STATE PROCESS"
+    # Fire Up Bootup State Process
     active_process_dict["stop_event100"] = multiprocessing.Event()
     active_process_dict["process100"]  = multiprocessing.Process(target=run_script, args=(state_files[0], output_queue, active_process_dict["stop_event100"], 100))
     active_process_dict["process100"].start()
     active_process_list.append(100)
 
-    # FIRE UP "DATA PROCESSES"
+    # Fire Up Data Processes
     for i in range(1, len(data_files) + 1):
         start_process(i, active_process_dict, process_files=data_files, process_list=active_process_list)
 
     current_state = "bootup"
     while True:
         try:
-            # OUTPUT PRINT STATEMENTS FROM PROCESSES
+            # Output print statements from processes
             process_id, output = output_queue.get_nowait()
             print(f"{output}")
             
-
-            # OVERRIDE SWITCH
+            # Override switch
             # DATA_BP = battery percentage
             # regardless of the current state, these MUST be done
             if "DATA_BP" in output and int(output[11:-1].strip()) <= 20:
@@ -164,15 +152,13 @@ if __name__ == "__main__":
                 start_process(process_id + 1, active_process_dict, process_files=state_files, process_list=active_process_list)
                 continue
 
-
-            # STARTUP => ...
+            # Startup => ...
             if "[STATE_BOOTUP] [Ended]" in output:
                 # start up DETUMBLE
                 current_state = "detumble"
                 start_process(101, active_process_dict, process_files=state_files, process_list=active_process_list)
 
-
-            # DETUMBLE => ...
+            # Detumble => ...
             if current_state == "detumble":
                 # if this line has data, extract it
                 value = extract_data(output)
@@ -186,8 +172,7 @@ if __name__ == "__main__":
                     start_process(102, active_process_dict, process_files=state_files, process_list=active_process_list)
                     continue
 
-
-            # CHARGE => ...
+            # Charge => ...
             if current_state == "charge":
                 # if this line has data, extract it
                 value = extract_data(output)
@@ -201,8 +186,7 @@ if __name__ == "__main__":
                     start_process(103, active_process_dict, process_files=state_files, process_list=active_process_list)
                     continue
 
-
-            # ANTENNAS => ...
+            # Antennas => ...
             if current_state == "antennas":
                 # if this line has data, extract it
                 value = extract_data(output)
@@ -220,8 +204,7 @@ if __name__ == "__main__":
                         start_process(104, active_process_dict, process_files=state_files, process_list=active_process_list)
                         continue
 
-
-            # COMMS => ...
+            # Comms => ...
             if current_state == "comms":
                 # if this line has data, extract it
                 value = extract_data(output)
@@ -244,9 +227,8 @@ if __name__ == "__main__":
                         current_state = "orient"
                         start_process(106, active_process_dict, process_files=state_files, process_list=active_process_list)
                         continue
-           
 
-            # DEPLOY PAYLOAD => ...
+            # Deploy Payload => ...
             if current_state == "deploy":
                 # if this line has data, extract it
                 value = extract_data(output)
@@ -260,8 +242,7 @@ if __name__ == "__main__":
                     start_process(106, active_process_dict, process_files=state_files, process_list=active_process_list)
                     continue
 
-
-            # ORIENT PAYLOAD => ...
+            # Orient Payload => ...
             if current_state == "orient":
                 if "DATA_STARTRACKER_POS" in output:
                     values = extract_data_multiple(output)
@@ -274,13 +255,6 @@ if __name__ == "__main__":
                         current_state = "comms"
                         start_process(104, active_process_dict, process_files=state_files, process_list=active_process_list)
                         continue
-
-
-            # DECIDE TO KILL
-            # if process_id == 1:
-            #   if "4" in output or "5" in output:
-            #        print("Process 1 terminated, due to data output")
-            #        processes[process_id].terminate()
 
         except queue.Empty:
             pass

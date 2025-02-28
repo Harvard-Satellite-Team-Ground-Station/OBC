@@ -1,17 +1,16 @@
-# ///////////////////////////////////////////////////////////////// #
-# COMMS STATE
-# ///////////////////////////////////////////////////////////////// #
+# state_comms.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 import time
 
 
-# FUNCTIONS
+
+# ++++++++++++++ Functions: Helper ++++++++++++++ #
 def __init__():
     while True:
         on_loop()
-
 
 def on_loop():
     # TO-DO: do some setup functions
@@ -19,6 +18,7 @@ def on_loop():
     time.sleep(5) 
 
 
-# MAIN FUNCTION
+
+# ++++++++++++++ Functions: Main ++++++++++++++ #
 print("\n \033[38;5;46m[STATE_COMMS] [Started]\033[0m \n", flush=True)
 __init__()
