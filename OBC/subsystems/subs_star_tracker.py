@@ -1,18 +1,13 @@
-# ///////////////////////////////////////////////////////////////// #
-# SUBSYSTEM: STAR TRACKER
-# ///////////////////////////////////////////////////////////////// #
+# subs_star_tracker.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 from subsystems import config
 
 
-# CLASS AND METHODS
-class subsystem_star_tracker:
+
+# ++++++++++++++ Class Definition ++++++++++++++ # 
+class SubsystemStarTracker:
     def __init__(self):
         pass
-
-    # DATA FUNCTIONS
-
-    # ACTION FUNCTIONS
-    pass

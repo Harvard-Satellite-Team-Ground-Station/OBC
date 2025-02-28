@@ -1,18 +1,14 @@
-# ///////////////////////////////////////////////////////////////// #
-# SUBSYSTEM: MAGNETORQUER
-# ///////////////////////////////////////////////////////////////// #
+# subs_magnetorquer.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 from subsystems import config
 
 
-# CLASS AND METHODS
-class subsystem_magnetorquer:
+
+# ++++++++++++++ Class Definition ++++++++++++++ # 
+class SubsystemMagnetorquer:
     def __init__(self):
-        pass
-
-    # DATA FUNCTIONS
-
-    # ACTION FUNCTIONS
-    pass
+        self.port_input = config.PORT_MAGNETORQUER_INPUT
+        self.port_output = config.PORT_MAGNETORQUER_OUTPUT

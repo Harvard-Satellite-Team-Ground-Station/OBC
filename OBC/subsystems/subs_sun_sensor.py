@@ -1,20 +1,15 @@
-# ///////////////////////////////////////////////////////////////// #
-# SUBSYSTEM: SUN SENSOR
-# ///////////////////////////////////////////////////////////////// #
+# subs_sun_sensor.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 from subsystems import config
 
 
-# CLASS AND METHODS
-class subsystem_sun_sensor:
+
+# ++++++++++++++ Class Definition ++++++++++++++ # 
+class SubsystemSunSensor:
     def __init__(self):
         pass
-
-    # DATA FUNCTIONS
-
-    # ACTION FUNCTIONS
-    pass
 
 

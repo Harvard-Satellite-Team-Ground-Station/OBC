@@ -1,18 +1,14 @@
-# ///////////////////////////////////////////////////////////////// #
-# SUBSYSTEM: CAMERA
-# ///////////////////////////////////////////////////////////////// #
+# subs_camera.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 from subsystems import config
 
 
-# CLASS AND METHODS
-class subsystem_camera:
+
+# ++++++++++++++ Class Definition ++++++++++++++ # 
+class SubsystemCamera:
     def __init__(self):
-        pass
-
-    # DATA FUNCTIONS
-
-    # ACTION FUNCTIONS
-    pass
+        self.port_input = config.PORT_CAMERA_INPUT
+        self.port_output = config.PORT_CAMERA_OUTPUT

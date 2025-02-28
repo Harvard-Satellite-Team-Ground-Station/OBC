@@ -1,20 +1,14 @@
-# ///////////////////////////////////////////////////////////////// #
-# SUBSYSTEM: ANTENNA
-# ///////////////////////////////////////////////////////////////// #
+# subs_antenna.py
 
 
-# IMPORTS
+
+# ++++++++++++++ Imports/Installs ++++++++++++++ #
 from subsystems import config
-import Adafruit_BBIO.GPIO as GPIO
 
 
-# CLASS AND METHODS
-class subsystem_antenna:
+
+# ++++++++++++++ Class Definition ++++++++++++++ # 
+class SubsystemAntenna:
     def __init__(self):
-        GPIO.setup("P8_15", GPIO.OUT)
-        pass
-
-    # DATA FUNCTIONS
-
-    # ACTION FUNCTIONS
-    pass
+        self.port_input = config.PORT_ANTENNA_INPUT
+        self.port_output = config.PORT_ANTENNA_OUTPUT
