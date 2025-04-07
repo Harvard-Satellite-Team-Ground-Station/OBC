@@ -3,6 +3,7 @@
 
 
 # ++++++++++++++ Imports/Installs ++++++++++++++ #
+import can
 import Adafruit_BBIO as BBIO
 from subsystems import config
 
@@ -11,7 +12,7 @@ from subsystems import config
 # ++++++++++++++ Class Definition ++++++++++++++ # 
 class SubsystemBattery:
     def __init__(self):
-        self.port_input = config.PORT_BATTERY_INPUT
+        self.port_input = can.interface.Bus(channel=config.PORT_BATTERY_INPUT, bustype='socketcan')
 
     def data_func_battery_percentage(self):
         """
