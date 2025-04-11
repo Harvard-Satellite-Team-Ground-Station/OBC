@@ -4,7 +4,6 @@
 
 # ++++++++++++++ Imports/Installs ++++++++++++++ #
 import can
-import Adafruit_BBIO as BBIO
 from subsystems import config
 
 
@@ -22,8 +21,7 @@ class SubsystemBattery:
         # Read ADC value (0-1.8V)
         # Since battery is (0-4.2V), scale by 2.34
         # Reverse voltage divider scaling (assuming 22kΩ / 47kΩ divider)
-        adc_value = BBIO.ADC.read(self.port_input)
-        voltage = adc_value * 2.34
+        voltage = val * 2.34
         voltage = voltage * (69 / 22) 
     
         if voltage >= 4.2:
