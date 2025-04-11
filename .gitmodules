@@ -1,0 +1,3 @@
+[submodule "OBC/pkgs/flight_controller_board"]
+	path = OBC/pkgs/flight_controller_board
+	url = https://github.com/proveskit/flight_controller_board.git
